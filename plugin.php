@@ -3,6 +3,7 @@ namespace OpenSeminar\Point;
 
 use Auth;
 use OpenSeminar\Controller;
+use OpenSeminar\Point\Models\Point;
 use OpenSeminar\Point\Models\PointLog;
 use Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -31,6 +32,12 @@ class Plugin extends AbstractPlugin
         /* Code2-2
         // 인터셉트 등록
         $this->registerBoardIntercept();
+        */
+
+        /* Code4-2
+        // 인터셉트 등록 메소드 변경
+        // Code2-2가 동작하지 않도록 해야함
+        $this->registerBoardIntercept2();
         */
 
         /* Code3-3
@@ -157,6 +164,12 @@ class Plugin extends AbstractPlugin
             Schema::create('points', function (Blueprint $table) {
                 $table->engine = "InnoDB";
 
+                $table->string('userId', 255);
+                $table->string('point', 255);
+                $table->timestamp('createdAt');
+                $table->timestamp('updatedAt');
+
+                $table->primary(array('userId'));
             });
         }
 
@@ -164,6 +177,10 @@ class Plugin extends AbstractPlugin
             Schema::create('point_logs', function (Blueprint $table) {
                 $table->engine = "InnoDB";
 
+                $table->increments('id');
+                $table->string('userId', 255);
+                $table->string('point', 255);
+                $table->timestamp('createdAt');
             });
         }
     }
@@ -207,7 +224,7 @@ class Plugin extends AbstractPlugin
     }
     */
 
-    ///* Code4-1
+    /* Code4-1
     // 게시판 인터셉트 등록 코드 개선. ORM 사용
     protected function registerBoardIntercept2()
     {
@@ -224,30 +241,21 @@ class Plugin extends AbstractPlugin
                     $user = Auth::user();
 
                     PointLog::save([
-
+                        'userId' => $user->getId(),
+                        'point' => $addPoint,
                     ]);
-//                    XeDB::table('point_logs')->insert([
-//                        'userId' => $user->getId(),
-//                        'point' => $addPoint,
-//                    ]);
 
-                    $point = XeDB::table('point_logs')->where('userId', $user->getId())->sum('point');
+                    $point = PointLog::where('userId', $user->getId())->sum('point');
 
-                    if (XeDB::table('points')->where('userId', $user->getId())->exists() === true) {
-                        XeDB::table('points')->where('userId', $user->getId())->update([
-                            'point' => $point,
-                        ]);
-                    } else {
-                        XeDB::table('points')->insert([
-                            'userId' => $user->getId(),
-                            'point' => $point,
-                        ]);
-                    }
+                    Point::save([
+                        'userId' => $user->getId(),
+                        'point' => $point,
+                    ]);
                 }
             }
         );
     }
-    //*/
+    */
 
     /* Code3-2
     // 관리자 메뉴에 추가 될 수 있도록 수정

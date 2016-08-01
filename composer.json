@@ -22,7 +22,14 @@
   "extra": {
     "xpressengine": {
       "title": "오픈세미나 포인트 플러그인",
-      "component": {}
+      "component": {
+        "openseminar_point/skin/board@default": {
+          "class": "OpenSeminar\\Point\\Skin",
+          "name": "포인트 플러그인 스킨",
+          "description": "",
+          "screenshot" : []
+        }
+      }
     }
   },
   "require": {
