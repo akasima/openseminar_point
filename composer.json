@@ -1,0 +1,35 @@
+{
+  "name": "xpressengine-plugin/openseminar_point",
+  "description": "This Package is Xpressengine Plugin - 오픈세미나 포인트 플러그인.",
+  "keywords": [
+    "xpressengine",
+    "plugin"
+  ],
+  "license": "LGPL-2.0",
+  "version": "1.0.0",
+  "type": "xpressengine-plugin",
+  "support": {
+    "email": "input@your.email"
+  },
+  "authors": [
+    {
+      "name": "input your name",
+      "email": "input@your.email",
+      "homepage": "http://input.your.site",
+      "role": "Developer"
+    }
+  ],
+  "extra": {
+    "xpressengine": {
+      "title": "오픈세미나 포인트 플러그인",
+      "component": {}
+    }
+  },
+  "require": {
+  },
+  "autoload": {
+    "psr-4": {
+      "OpenSeminar\\Point\\": "src/"
+    }
+  }
+}
