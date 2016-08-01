@@ -7,10 +7,18 @@ use App\Http\Controllers\Controller as AppController;
 use Request;
 use XeDB;
 use XePresenter;
+use XeFrontend;
+use XeConfig;
 use Xpressengine\User\Models\User;
 
 class Controller extends AppController
 {
+    // Code7-1
+    // validation rule 추가
+    protected $rules = [
+        'board_point' => 'required|numeric',
+    ];
+
     /* Code5-1
     // 스킨 사용 설정
     public function __construct()
@@ -40,6 +48,9 @@ class Controller extends AppController
         }
         $paginate = $query->orderBy('createdAt', 'desc')->paginate($perPage);
 
+        // Code7-3
+        // XeFrontend::rule('config', $this->rules);
+
         // Code5-2
         // Skin 사용할 때 alias를 지정할 필요 없음
         // return XePresenter::make('index', ['paginate' => $paginate,]);
@@ -51,4 +62,19 @@ class Controller extends AppController
 
         return 'point index controller';
     }
+
+    /* Code6-6
+    public function update(Request $request)
+    {
+        // Code7-2
+        // $this->validate($request, $this->rule);
+
+        $config = XeConfig::get(Plugin::getId());
+
+        $config->set('board_point', $request->get('board_point'));
+        XeConfig::put(Plugin::getId(), $config->getPureAll());
+
+        return redirect(route('openSeminar.point.settings.index'));
+    }
+    */
 }
