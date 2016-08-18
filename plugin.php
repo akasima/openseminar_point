@@ -13,7 +13,6 @@ use XeDB;
 use XeRegister;
 use XeConfig;
 use Route;
-use XeConfig;
 use Xpressengine\Config\ConfigEntity;
 use Xpressengine\Http\Request;
 use Xpressengine\Plugin\AbstractPlugin;
