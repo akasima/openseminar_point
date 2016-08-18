@@ -7,3 +7,4 @@ function deleteAll()
     alert(XE.Lang.trans('core::accessDenied'));
 }
 */
+

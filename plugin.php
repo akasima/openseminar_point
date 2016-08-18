@@ -13,6 +13,7 @@ use XeDB;
 use XeRegister;
 use XeConfig;
 use Route;
+use XeConfig;
 use Xpressengine\Config\ConfigEntity;
 use Xpressengine\Http\Request;
 use Xpressengine\Plugin\AbstractPlugin;
@@ -151,6 +152,15 @@ class Plugin extends AbstractPlugin
     public function update($installedVersion = null)
     {
         // implement code
+        /* Code1-2
+        // install 할 때 테이블이 설치될 수 있도록 메소드 실행
+        $this->createTables();
+        */
+
+        /* Code6-2
+        // update 할 때 설정 등록
+        $this->registerPointConfig();
+        */
 
         /* Code1-2
         // install 할 때 테이블이 설치될 수 있도록 메소드 실행
@@ -332,12 +342,62 @@ class Plugin extends AbstractPlugin
 
             // Code6-5
             // 댓글 등록 라우트 추가
-            Route::post('/updateConfig', [
-                'as' => 'openSeminar.point.settings.update',
-                'uses' => 'Controller@update',
-            ]);
+//            Route::post('/updateConfig', [
+//                'as' => 'openSeminar.point.settings.update',
+//                'uses' => 'Controller@update',
+//            ]);
 
         }, ['namespace' => 'OpenSeminar\Point']);
+    }
+    //*/
+
+    /* Code6-1
+    // 포인트 기본 설정 등록
+    protected function registerPointConfig()
+    {
+        $config = XeConfig::get(static::getId());
+        if ($config === null) {
+            $config = new ConfigEntity();
+
+            $config->set('board_point', 5); // 게시물 등록 할 때 5점
+            XeConfig::set(static::getId(), $config->getPureAll());
+        }
+    }
+    */
+
+    /* Code6-3
+    // 설정된 config 사용
+    protected function registerBoardIntercept3()
+    {
+        intercept(
+            BoardHandler::class . '@add',
+            static::getId() . '::board.add',
+            function ($addFunc, array $args, UserInterface $user, ConfigEntity $config) {
+
+                $board = $addFunc($args, $user, $config);
+
+                // 게시물 저장 후 포인트 적립
+                if (Auth::check()) {
+
+                    $config = XeConfig::get(static::getId());
+                    $addPoint = $config->get('board_point');
+
+                    $user = Auth::user();
+
+                    PointLog::save([
+                        'userId' => $user->getId(),
+                        'point' => $addPoint,
+                    ]);
+
+                    $point = PointLog::where('userId', $user->getId())->sum('point');
+
+                    Point::save([
+                        'userId' => $user->getId(),
+                        'point' => $point,
+                    ]);
+                }
+            }
+        );
     }
     */
 

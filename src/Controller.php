@@ -8,10 +8,12 @@ use XePresenter;
 use XeFrontend;
 use XeConfig;
 use Xpressengine\Http\Request;
+
 use Xpressengine\User\Models\User;
 
 class Controller extends AppController
 {
+
     // Code8-1
     // validation rule 추가
     protected $rules = [
