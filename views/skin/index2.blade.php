@@ -1,5 +1,12 @@
 <div class="title">{{ $title }}</div>
 
+<form method="post" action="{{route('openSeminar.point.settings.update')}}">
+    <input type="hidden" name="_token" value="{{csrf_token()}}" />
+    게시판 지급 포인트 <input type="text" name="board_point" value="{{$config->get('board_point')}}"> <br/>
+    <br/>
+    <button type="submit">설정 변경</button>
+</form>
+
 
 <form method="get">
     <input type="text" name="displayName" value="{{Input::get('displayName', '')}}"/>
