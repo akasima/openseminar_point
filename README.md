@@ -10,6 +10,8 @@
 * Laravel Query builder http://xpressengine.github.io/laravel-korean-docs/docs/5.0/queries/
 * Laravel Pagination http://xpressengine.github.io/laravel-korean-docs/docs/5.0/pagination
 * Laravel Eloquent ORM http://xpressengine.github.io/laravel-korean-docs/docs/5.0/eloquent
+* Laravel Routing http://xpressengine.github.io/laravel-korean-docs/docs/5.0/routing
+* Laravel Controller xpressengine.github.io/laravel-korean-docs/docs/5.0/controllers
 * Laravel Request http://xpressengine.github.io/laravel-korean-docs/docs/5.0/requests
 * Laravel Validation http://xpressengine.github.io/laravel-korean-docs/docs/5.0/validation
 

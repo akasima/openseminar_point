@@ -1,6 +1,5 @@
 <div class="title">{{ $title }}</div>
 
-<!-- Code3-7 -->
 <form method="get">
     <input type="text" name="displayName" value="{{Input::get('displayName', '')}}"/>
     <button type="submit">검색</button>
@@ -26,4 +25,3 @@
 </table>
 
 {!! $paginate->render() !!}
-<!-- EOF Code3-7 -->

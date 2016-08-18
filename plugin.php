@@ -32,18 +32,18 @@ class Plugin extends AbstractPlugin
 
         $this->route();
 
-        /* Code2-2
+        /* Code2-3
         // 인터셉트 등록
         $this->registerBoardIntercept();
         */
 
         /* Code4-2
         // 인터셉트 등록 메소드 변경
-        // Code2-2가 동작하지 않도록 해야함
+        // Code2-3이 동작하지 않도록 해야함
         $this->registerBoardIntercept2();
         */
 
-        /* Code6-4
+        /* Code6-6
         // 인터셉트 등록 메소드 변경
         // Code4-2가 동작하지 않도록 해야함
         $this->registerBoardIntercept3();
@@ -151,22 +151,12 @@ class Plugin extends AbstractPlugin
     public function update($installedVersion = null)
     {
         // implement code
-        /* Code1-2
-        // install 할 때 테이블이 설치될 수 있도록 메소드 실행
+        /* Code1-4
+        // update 할 때 테이블이 설치될 수 있도록 메소드 실행
         $this->createTables();
         */
 
-        /* Code6-2
-        // update 할 때 설정 등록
-        $this->registerPointConfig();
-        */
-
-        /* Code1-2
-        // install 할 때 테이블이 설치될 수 있도록 메소드 실행
-        $this->createTables();
-        */
-
-        /* Code6-2
+        /* Code6-4
         // update 할 때 설정 등록
         $this->registerPointConfig();
         */
@@ -184,7 +174,7 @@ class Plugin extends AbstractPlugin
      */
     public function checkUpdated($currentVersion = null)
     {
-        /* Code1-2
+        /* Code1-3
         // 테이블이 없으면 업데이트 표시 되도록
         if (
             Schema::hasTable('points') === false ||
@@ -194,7 +184,7 @@ class Plugin extends AbstractPlugin
         }
         */
 
-        /* Code6-2
+        /* Code6-3
         // config 가 없으면 update 표시 되도록
         $config = XeConfig::get(static::getId());
         if ($config === null) {
@@ -247,29 +237,31 @@ class Plugin extends AbstractPlugin
 
                 $board = $addFunc($args, $user, $config);
 
-                // 게시물 저장 후 포인트 적립
-                $addPoint = 5;
-                if (Auth::check()) {
-                    $user = Auth::user();
-                    XeDB::table('point_logs')->insert([
-                        'userId' => $user->getId(),
-                        'point' => $addPoint,
-                        'createdAt' => date('Y-m-d H:i:s'),
-                    ]);
-
-                    $point = XeDB::table('point_logs')->where('userId', $user->getId())->sum('point');
-
-                    if (XeDB::table('points')->where('userId', $user->getId())->exists() === true) {
-                        XeDB::table('points')->where('userId', $user->getId())->update([
-                            'point' => $point,
-                        ]);
-                    } else {
-                        XeDB::table('points')->insert([
-                            'userId' => $user->getId(),
-                            'point' => $point,
-                        ]);
-                    }
-                }
+                // Code2-2
+                // 게시물 저장 후 포인트 적립 코드
+//                $addPoint = 5;
+//                if (Auth::check()) {
+//                    $user = Auth::user();
+//                    XeDB::table('point_logs')->insert([
+//                        'userId' => $user->getId(),
+//                        'point' => $addPoint,
+//                        'createdAt' => date('Y-m-d H:i:s'),
+//                    ]);
+//
+//                    $point = XeDB::table('point_logs')->where('userId', $user->getId())->sum('point');
+//
+//                    if (XeDB::table('points')->where('userId', $user->getId())->exists() === true) {
+//                        XeDB::table('points')->where('userId', $user->getId())->update([
+//                            'point' => $point,
+//                        ]);
+//                    } else {
+//                        XeDB::table('points')->insert([
+//                            'userId' => $user->getId(),
+//                            'point' => $point,
+//                            'createdAt' => date('Y-m-d H:i:s'),
+//                        ]);
+//                    }
+//                }
 
                 return $board;
             }
@@ -289,7 +281,7 @@ class Plugin extends AbstractPlugin
                 $board = $addFunc($args, $user, $config);
 
                 // 게시물 저장 후 포인트 적립
-                $addPoint = 5;
+                $addPoint = 6;
                 if (Auth::check()) {
                     $user = Auth::user();
 
@@ -317,7 +309,7 @@ class Plugin extends AbstractPlugin
     }
     */
 
-    /* Code3-2
+    /* Code3-1
     // 관리자 메뉴에 추가 될 수 있도록 수정
     protected function registerSettingsMenu()
     {
@@ -328,7 +320,7 @@ class Plugin extends AbstractPlugin
     }
     */
 
-    /* Code3-3
+    /* Code3-2
     // 관리자 페이지 라우트 등록
     protected function registerSettingsRoute()
     {
@@ -339,65 +331,15 @@ class Plugin extends AbstractPlugin
                 'settings_menu' => 'contents.openSeminarPoint'
             ]);
 
-            // Code6-5
+            // Code6-7
             // 댓글 등록 라우트 추가
-//            Route::post('/updateConfig', [
-//                'as' => 'openSeminar.point.settings.update',
-//                'uses' => 'Controller@update',
-//            ]);
+            Route::post('/updateConfig', [
+                'as' => 'openSeminar.point.settings.update',
+                'uses' => 'Controller@update',
+            ]);
 
         }, ['namespace' => 'OpenSeminar\Point']);
     }
-    //*/
-
-    /* Code6-1
-    // 포인트 기본 설정 등록
-    protected function registerPointConfig()
-    {
-        $config = XeConfig::get(static::getId());
-        if ($config === null) {
-            $config = new ConfigEntity();
-
-            $config->set('board_point', 5); // 게시물 등록 할 때 5점
-            XeConfig::set(static::getId(), $config->getPureAll());
-        }
-    }
-    */
-
-    /* Code6-3
-    // 설정된 config 사용
-    protected function registerBoardIntercept3()
-    {
-        intercept(
-            BoardHandler::class . '@add',
-            static::getId() . '::board.add',
-            function ($addFunc, array $args, UserInterface $user, ConfigEntity $config) {
-
-                $board = $addFunc($args, $user, $config);
-
-                // 게시물 저장 후 포인트 적립
-                if (Auth::check()) {
-
-                    $config = XeConfig::get(static::getId());
-                    $addPoint = $config->get('board_point');
-
-                    $user = Auth::user();
-
-                    PointLog::save([
-                        'userId' => $user->getId(),
-                        'point' => $addPoint,
-                    ]);
-
-                    $point = PointLog::where('userId', $user->getId())->sum('point');
-
-                    Point::save([
-                        'userId' => $user->getId(),
-                        'point' => $point,
-                    ]);
-                }
-            }
-        );
-    }
     */
 
     /* Code6-1
@@ -408,13 +350,13 @@ class Plugin extends AbstractPlugin
         if ($config === null) {
             $config = new ConfigEntity();
 
-            $config->set('board_point', 5); // 게시물 등록 할 때 5점
+            $config->set('board_point', 7); // 게시물 등록 할 때 7점
             XeConfig::set(static::getId(), $config->getPureAll());
         }
     }
     */
 
-    /* Code6-3
+    /* Code6-5
     // 설정된 config 사용
     protected function registerBoardIntercept3()
     {

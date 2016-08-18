@@ -1,5 +1,4 @@
 <?php
-//Code3-1
 namespace OpenSeminar\Point;
 
 use App\Http\Controllers\Controller as AppController;
@@ -8,7 +7,6 @@ use XePresenter;
 use XeFrontend;
 use XeConfig;
 use Xpressengine\Http\Request;
-
 use Xpressengine\User\Models\User;
 
 class Controller extends AppController
@@ -30,11 +28,12 @@ class Controller extends AppController
 
     public function index(Request $request)
     {
-        /* Code3-6
+        /* Code3-4
         //
         $perPage = 20;
         $query = XeDB::table('point_logs');
 
+        // 회원 이름으로 검색
         if ($request->get('displayName', '') != '') {
             $userIds = [];
             foreach (
@@ -59,7 +58,7 @@ class Controller extends AppController
 //        $config = $config = XeConfig::get(Plugin::getId());
 //        return XePresenter::make('index3', ['paginate' => $paginate,'title' => 'Point log 스킨','config'=>$config]);
 
-        // Code6-7
+        // Code6-9
         // index2.blade.php 사용하도록 변경
 //        $config = $config = XeConfig::get(Plugin::getId());
 //        return XePresenter::make('index2', ['paginate' => $paginate,'title' => 'Point log 스킨','config'=>$config]);
@@ -77,11 +76,11 @@ class Controller extends AppController
         return 'point index controller';
     }
 
-    /* Code6-6
+    /* Code6-8
     public function update(Request $request)
     {
         // Code8-2
-        $this->validate($request, $this->rules);
+//        $this->validate($request, $this->rules);
 
         $config = XeConfig::get(Plugin::getId());
 
